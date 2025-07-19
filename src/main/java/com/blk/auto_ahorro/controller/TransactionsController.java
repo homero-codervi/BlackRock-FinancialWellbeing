@@ -1,5 +1,8 @@
 package com.blk.auto_ahorro.controller;
 
+import com.blk.auto_ahorro.dto.request.ExpensesRequest;
+import com.blk.auto_ahorro.dto.response.TransactionsParseResponse;
+import com.blk.auto_ahorro.service.TransactionService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,9 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/blackrock/challenge/v1/")
 public class TransactionsController {
+
+    TransactionService transactionService = new TransactionService();
 
     // DTO to simulate a transaction
     public static class TransactionRequest {
@@ -19,27 +26,16 @@ public class TransactionsController {
         // Getters and setters (or use Lombok for brevity)
     }
 
-    //TODO parse method
-    /**
-     *
-    Recibe una lista de gastos y devuelve una lista de transacciones enriquecidas con los campos ceilling(techo) y remanent (remanente)
-    . Tambien se puede calcular el total invertido, remanen y gasto.
-
-    {"date": "2023-10-12 20:15", "amount":250.00, "ceiling":300.00, "remanent":50}
-     */
     /**
      *
      * @param request
      * @return
      */
     @PostMapping("transactions:parse")
-    public ResponseEntity<String> parseTransaction(@RequestBody TransactionRequest request) {
+    public ResponseEntity<List<TransactionsParseResponse>> parseTransaction(@RequestBody List<ExpensesRequest> request) {
+        List<TransactionsParseResponse> transactionsParseResponses = transactionService.GetTransactionsFromExpenses(request);
 
-
-        if (request.amount <= 0) {
-            return ResponseEntity.badRequest().body("Invalid amount: must be greater than 0");
-        }
-        return ResponseEntity.ok("Transaction is valid");
+        return ResponseEntity.ok(transactionsParseResponses);
     }
     //TODO validator method
     /**
