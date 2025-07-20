@@ -1,33 +1,58 @@
 package com.blk.auto_ahorro.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.annotation.PostConstruct;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.http.ResponseEntity;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.ThreadMXBean;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/blackrock/challenge/v1/")
-
 public class PerformanceController {
 
-    // DTO to simulate a transaction
-    public static class TransactionRequest {
-        public String id;
-        public double amount;
+    private LocalDateTime appStartTime;
 
-        // Getters and setters (or use Lombok for brevity)
+    @PostConstruct
+    public void init() {
+        appStartTime = LocalDateTime.now();
     }
 
-    //TODO returns ppr method
-    @PostMapping("returns:ppr")
-    public ResponseEntity<String> performance(@RequestBody TransactionsController.TransactionRequest request) {
+    @GetMapping("/performance")
+    public Map<String, Object> getPerformance() {
+        LocalDateTime now = LocalDateTime.now();
+        Duration uptime = Duration.between(appStartTime, now);
 
+        long hours = uptime.toHours();
+        long minutes = uptime.toMinutesPart();
+        long seconds = uptime.toSecondsPart();
+        long millis = uptime.toMillisPart();
 
-        if (request.amount <= 0) {
-            return ResponseEntity.badRequest().body("Invalid amount: must be greater than 0");
-        }
-        return ResponseEntity.ok("Transaction is valid");
+        // Format as "yyyy-MM-dd HH:mm:ss.SS"
+        String baseDate = appStartTime.toLocalDate().toString();
+        String formatted = String.format("%s %02d:%02d:%02d.%02d",
+                baseDate, hours, minutes, seconds, millis / 10);
+
+        // Memory in KB
+        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+        long memoryUsedKb = memoryBean.getHeapMemoryUsage().getUsed() / 1024;
+
+        // Thread count
+        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+        int threadCount = threadBean.getThreadCount();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("time", formatted);
+        result.put("memory", memoryUsedKb);
+        result.put("threads", threadCount);
+
+        return result;
     }
+
 }
