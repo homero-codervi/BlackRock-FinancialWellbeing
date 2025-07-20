@@ -1,14 +1,15 @@
 package com.blk.auto_ahorro.dto;
 
-import com.blk.auto_ahorro.dto.request.ExpensesRequest;
 import com.blk.auto_ahorro.dto.request.TransactionRequest;
+import com.blk.auto_ahorro.exception.InvalidDateFormatException;
+import com.blk.auto_ahorro.utils.TransformDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class TransactionDTO {
 
-    private Date date;
+    private LocalDateTime date;
     private Double amount;
     private Double ceiling;
     private Double remanent;
@@ -16,26 +17,26 @@ public class TransactionDTO {
     public TransactionDTO() {
     }
 
-    public TransactionDTO(Date date, Double amount) {
+    public TransactionDTO(LocalDateTime date, Double amount) {
         this.date = date;
         this.amount = amount;
     }
 
+    public TransactionDTO(Double amount, Double ceiling, Double remanent) {
+        this.date = null;
+        this.amount = amount;
+        this.ceiling = ceiling;
+        this.remanent = remanent;
+    }
+
     public TransactionDTO(ExpenseDTO expense) {
-        //this.date = expense.getDate();
-        this.date = null;
+        this.date = expense.getDate();
         this.amount = expense.getAmount();
     }
 
-    
-    public TransactionDTO(ExpensesRequest expense) {
-        //this.date = expense.getDate();
-        this.date = null;
-        this.amount = expense.getAmount();
-    }
 
-    public TransactionDTO(TransactionRequest transaction) {
-        this.date = null;
+    public TransactionDTO(TransactionRequest transaction) throws InvalidDateFormatException {
+        this.date = TransformDate.stringToDate(transaction.getDate());
         this.amount = transaction.getAmount();
         this.ceiling = transaction.getCeiling();
         this.remanent = transaction.getRemanent();
@@ -53,11 +54,11 @@ public class TransactionDTO {
         return Objects.hash(date, amount);
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

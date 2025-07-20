@@ -44,22 +44,11 @@ public class TransactionsController {
 
         return ResponseEntity.ok(transactionsParseResponses);
     }
-    //TODO validator method
+
     /**
-     * Valida una lista de transacciones en funcion del sueldo (wage) y el monto maximo a invertir.
-     * @param request
-     * {
-     *     "wage": 50000,
-     *     "transactions": [
-     *          {"date": "2023-10-12 20:15", "amount": 250.00, "ceiling":300.00 "remanent":50}
-     *     ]
-     * }
-     * @return
-     * Devuelve las transacciones validas, invalidas y duplicadas
-     * [transaction],
-     * [invalid_transaction] (extiende de transaction con un campo adicional)
-     *  message: String(Explicacion del error)
      *
+     * @param request
+     * @return
      */
     @PostMapping("/transactions:validator")
     public ResponseEntity<TransactionsValidatorResponse> validateTransaction(@RequestBody TransactionsValidatorRequest request) {

@@ -11,7 +11,13 @@ public class TransactionValidatorServiceImpl implements TransactionValidatorServ
     }
 
     public String isValidDate(TransactionDTO transactionDTO){
-        //TODO
+        if(transactionDTO == null ){
+            return "The transaction is NULL.";
+        }
+
+        if(transactionDTO.getDate() == null){
+            return "The date value is empty or in a format not defined.";
+        }
         return "";
     }
 

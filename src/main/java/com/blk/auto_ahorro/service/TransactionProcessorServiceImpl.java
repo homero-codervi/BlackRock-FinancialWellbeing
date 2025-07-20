@@ -8,6 +8,7 @@ import com.blk.auto_ahorro.dto.request.TransactionRequest;
 import com.blk.auto_ahorro.dto.request.TransactionsValidatorRequest;
 import com.blk.auto_ahorro.dto.response.TransactionsParseResponse;
 import com.blk.auto_ahorro.dto.response.TransactionsValidatorResponse;
+import com.blk.auto_ahorro.exception.InvalidDateFormatException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,8 +67,19 @@ public class TransactionProcessorServiceImpl implements TransactionProcessorServ
         Set<TransactionDTO> seen = new HashSet<>();
 
         for(TransactionRequest transaction : request.getTransactions()){
-            TransactionDTO transactionDTO = new TransactionDTO(transaction);
-            String error_message = transactionValidatorService.isValid(transactionDTO);
+            String error_message = "";
+            TransactionDTO transactionDTO = null;
+
+            try{
+                transactionDTO = new TransactionDTO(transaction);
+            } catch (InvalidDateFormatException e) {
+                System.out.println("The transaction : {'date':'"+transaction.getDate()+ "', 'amount' : '" + transaction.getAmount()+"'} does not have a correct format date.");
+                error_message = "The transaction does not have a defined format to the date value."+transaction.getDate();
+                transactionDTO =  new TransactionDTO(transaction.getAmount(), transaction.getCeiling(), transaction.getRemanent());
+            }
+
+            error_message += transactionValidatorService.isValid(transactionDTO);
+
             if(error_message.isEmpty()){
                 response.getValid().add(transactionDTO);
                 if(!seen.add(transactionDTO)){

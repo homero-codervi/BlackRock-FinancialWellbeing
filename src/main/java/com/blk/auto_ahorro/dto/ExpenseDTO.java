@@ -1,25 +1,31 @@
 package com.blk.auto_ahorro.dto;
 
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
+import com.blk.auto_ahorro.exception.InvalidDateFormatException;
+import com.blk.auto_ahorro.utils.TransformDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ExpenseDTO {
 
-    private Date date;
+    private LocalDateTime date;
     private Double amount;
 
     public ExpenseDTO(ExpensesRequest expense) {
-        //this.date = expense.getDate();
         this.date = null;
+        try {
+            this.date = TransformDate.stringToDate(expense.getDate());
+        }catch (InvalidDateFormatException e){
+            System.out.println("The expense : {'date':'"+expense.getDate()+"', 'amount' : '"+expense.getAmount()+"'} does not have a correct format date.");
+        }
         this.amount = expense.getAmount();
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

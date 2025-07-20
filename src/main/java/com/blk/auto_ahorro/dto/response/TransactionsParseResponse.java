@@ -1,14 +1,11 @@
 package com.blk.auto_ahorro.dto.response;
 
-import com.blk.auto_ahorro.dto.InvalidTransactionDTO;
 import com.blk.auto_ahorro.dto.TransactionDTO;
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
-
-import java.util.Date;
-import java.util.List;
+import com.blk.auto_ahorro.utils.TransformDate;
 
 public class TransactionsParseResponse {
-    private Date date;
+    private String date;
     private Double amount;
     private Double ceiling;
     private Double remanent;
@@ -16,30 +13,28 @@ public class TransactionsParseResponse {
     public TransactionsParseResponse() {
     }
 
-    public TransactionsParseResponse(Date date, Double amount) {
+    public TransactionsParseResponse(String date, Double amount) {
         this.date = date;
         this.amount = amount;
     }
 
     public TransactionsParseResponse(ExpensesRequest expense) {
-        //this.date = expense.getDate();
-        this.date = null;
+        this.date = expense.getDate();
         this.amount = expense.getAmount();
     }
 
     public TransactionsParseResponse(TransactionDTO transaction) {
-        //this.date = expense.getDate();
-        this.date = null;
+        this.date = TransformDate.dateTimeToString(transaction.getDate());
         this.amount = transaction.getAmount();
         this.ceiling = transaction.getCeiling();
         this.remanent = transaction.getRemanent();
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
