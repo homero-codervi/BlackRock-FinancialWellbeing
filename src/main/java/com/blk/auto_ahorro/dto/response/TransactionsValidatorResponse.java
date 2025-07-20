@@ -3,6 +3,7 @@ package com.blk.auto_ahorro.dto.response;
 import com.blk.auto_ahorro.dto.InvalidTransactionDTO;
 import com.blk.auto_ahorro.dto.TransactionDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionsValidatorResponse {
@@ -10,6 +11,8 @@ public class TransactionsValidatorResponse {
     private List<InvalidTransactionDTO> invalid;
 
     public TransactionsValidatorResponse() {
+        valid = new ArrayList<>();
+        invalid = new ArrayList<>();
     }
 
     public TransactionsValidatorResponse(List<TransactionDTO> valid, List<InvalidTransactionDTO> invalid) {

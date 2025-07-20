@@ -4,6 +4,7 @@ import com.blk.auto_ahorro.dto.ExpenseDTO;
 import com.blk.auto_ahorro.dto.InvalidTransactionDTO;
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
 import com.blk.auto_ahorro.dto.TransactionDTO;
+import com.blk.auto_ahorro.dto.request.TransactionRequest;
 import com.blk.auto_ahorro.dto.request.TransactionsValidatorRequest;
 import com.blk.auto_ahorro.dto.response.TransactionsParseResponse;
 import com.blk.auto_ahorro.dto.response.TransactionsValidatorResponse;
@@ -64,15 +65,16 @@ public class TransactionProcessorServiceImpl implements TransactionProcessorServ
         TransactionsValidatorResponse response = new TransactionsValidatorResponse();
         Set<TransactionDTO> seen = new HashSet<>();
 
-        for(TransactionDTO transaction : request.getTransactions()){
-            String error_message = transactionValidatorService.isValid(transaction);
+        for(TransactionRequest transaction : request.getTransactions()){
+            TransactionDTO transactionDTO = new TransactionDTO(transaction);
+            String error_message = transactionValidatorService.isValid(transactionDTO);
             if(error_message.isEmpty()){
-                response.getValid().add(transaction);
-                if(!seen.add(transaction)){
-                    response.getInvalid().add(new InvalidTransactionDTO(transaction, "Transaction duplicated."));
+                response.getValid().add(transactionDTO);
+                if(!seen.add(transactionDTO)){
+                    response.getInvalid().add(new InvalidTransactionDTO(transactionDTO, "Transaction duplicated."));
                 }
             }else{
-                response.getInvalid().add(new InvalidTransactionDTO(transaction, error_message));
+                response.getInvalid().add(new InvalidTransactionDTO(transactionDTO, error_message));
             }
         }
         return response;

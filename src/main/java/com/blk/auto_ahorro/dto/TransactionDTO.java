@@ -1,6 +1,7 @@
 package com.blk.auto_ahorro.dto;
 
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
+import com.blk.auto_ahorro.dto.request.TransactionRequest;
 
 import java.util.Date;
 import java.util.Objects;
@@ -31,6 +32,13 @@ public class TransactionDTO {
         //this.date = expense.getDate();
         this.date = null;
         this.amount = expense.getAmount();
+    }
+
+    public TransactionDTO(TransactionRequest transaction) {
+        this.date = null;
+        this.amount = transaction.getAmount();
+        this.ceiling = transaction.getCeiling();
+        this.remanent = transaction.getRemanent();
     }
 
     @Override

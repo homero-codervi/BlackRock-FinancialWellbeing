@@ -7,7 +7,7 @@ import java.util.List;
 public class TransactionsValidatorRequest {
 
     Double wage;
-    List<TransactionDTO> transactions;
+    List<TransactionRequest> transactions;
 
     public Double getWage() {
         return wage;
@@ -17,11 +17,11 @@ public class TransactionsValidatorRequest {
         this.wage = wage;
     }
 
-    public List<TransactionDTO> getTransactions() {
+    public List<TransactionRequest> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<TransactionDTO> transactions) {
+    public void setTransactions(List<TransactionRequest> transactions) {
         this.transactions = transactions;
     }
 }
