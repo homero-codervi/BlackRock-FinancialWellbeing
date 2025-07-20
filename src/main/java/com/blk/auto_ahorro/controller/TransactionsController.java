@@ -1,7 +1,9 @@
 package com.blk.auto_ahorro.controller;
 
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
+import com.blk.auto_ahorro.dto.request.TransactionsValidatorRequest;
 import com.blk.auto_ahorro.dto.response.TransactionsParseResponse;
+import com.blk.auto_ahorro.dto.response.TransactionsValidatorResponse;
 import com.blk.auto_ahorro.service.TransactionService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +18,12 @@ import java.util.List;
 @RequestMapping("/blackrock/challenge/v1/")
 public class TransactionsController {
 
-    TransactionService transactionService = new TransactionService();
+    //TransactionService transactionService = new TransactionService();
+    TransactionService transactionService;
+
+    public TransactionsController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     // DTO to simulate a transaction
     public static class TransactionRequest {
@@ -33,7 +40,7 @@ public class TransactionsController {
      */
     @PostMapping("transactions:parse")
     public ResponseEntity<List<TransactionsParseResponse>> parseTransaction(@RequestBody List<ExpensesRequest> request) {
-        List<TransactionsParseResponse> transactionsParseResponses = transactionService.GetTransactionsFromExpenses(request);
+        List<TransactionsParseResponse> transactionsParseResponses = transactionService.getTransactionsFromExpenses(request);
 
         return ResponseEntity.ok(transactionsParseResponses);
     }
@@ -55,11 +62,9 @@ public class TransactionsController {
      *
      */
     @PostMapping("/transactions:validator")
-    public ResponseEntity<String> validateTransaction(@RequestBody TransactionRequest request) {
-        if (request.amount <= 0) {
-            return ResponseEntity.badRequest().body("Invalid amount: must be greater than 0");
-        }
-        return ResponseEntity.ok("Transaction is valid");
+    public ResponseEntity<TransactionsValidatorResponse> validateTransaction(@RequestBody TransactionsValidatorRequest request) {
+        TransactionsValidatorResponse response = transactionService.validateTransactions(request);
+        return ResponseEntity.ok(response);
     }
     //TODO filter method
 

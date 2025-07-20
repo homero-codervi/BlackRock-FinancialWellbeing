@@ -1,0 +1,35 @@
+package com.blk.auto_ahorro.dto.response;
+
+import com.blk.auto_ahorro.dto.InvalidTransactionDTO;
+import com.blk.auto_ahorro.dto.TransactionDTO;
+
+import java.util.List;
+
+public class TransactionsValidatorResponse {
+    private List<TransactionDTO> valid;
+    private List<InvalidTransactionDTO> invalid;
+
+    public TransactionsValidatorResponse() {
+    }
+
+    public TransactionsValidatorResponse(List<TransactionDTO> valid, List<InvalidTransactionDTO> invalid) {
+        this.valid = valid;
+        this.invalid = invalid;
+    }
+
+    public List<TransactionDTO> getValid() {
+        return valid;
+    }
+
+    public void setValid(List<TransactionDTO> valid) {
+        this.valid = valid;
+    }
+
+    public List<InvalidTransactionDTO> getInvalid() {
+        return invalid;
+    }
+
+    public void setInvalid(List<InvalidTransactionDTO> invalid) {
+        this.invalid = invalid;
+    }
+}

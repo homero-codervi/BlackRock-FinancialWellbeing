@@ -3,6 +3,7 @@ package com.blk.auto_ahorro.dto;
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class TransactionDTO {
 
@@ -30,6 +31,18 @@ public class TransactionDTO {
         //this.date = expense.getDate();
         this.date = null;
         this.amount = expense.getAmount();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TransactionDTO that = (TransactionDTO) o;
+        return Objects.equals(date, that.date) && Objects.equals(amount, that.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, amount);
     }
 
     public Date getDate() {

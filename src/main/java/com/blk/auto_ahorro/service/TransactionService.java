@@ -1,17 +1,15 @@
 package com.blk.auto_ahorro.service;
 
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
+import com.blk.auto_ahorro.dto.request.TransactionsValidatorRequest;
 import com.blk.auto_ahorro.dto.response.TransactionsParseResponse;
+import com.blk.auto_ahorro.dto.response.TransactionsValidatorResponse;
 
 import java.util.List;
 
-public class TransactionService {
+public interface TransactionService {
 
-    //private final ExpensesProcessor expensesProcessor = new ExpensesProcessor();
+    public List<TransactionsParseResponse> getTransactionsFromExpenses(List<ExpensesRequest> expenses);
 
-    private final TransactionProcessor transactionProcessor = new TransactionProcessor();
-
-    public List<TransactionsParseResponse> GetTransactionsFromExpenses(List<ExpensesRequest> expenses){
-        return transactionProcessor.processExpense(expenses);
-    }
+    public TransactionsValidatorResponse validateTransactions(TransactionsValidatorRequest request);
 }
