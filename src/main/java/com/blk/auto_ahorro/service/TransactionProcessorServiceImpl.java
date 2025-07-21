@@ -1,9 +1,7 @@
 package com.blk.auto_ahorro.service;
 
-import com.blk.auto_ahorro.dto.ExpenseDTO;
-import com.blk.auto_ahorro.dto.InvalidTransactionDTO;
+import com.blk.auto_ahorro.dto.*;
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
-import com.blk.auto_ahorro.dto.TransactionDTO;
 import com.blk.auto_ahorro.dto.request.TransactionRequest;
 import com.blk.auto_ahorro.dto.request.TransactionsValidatorRequest;
 import com.blk.auto_ahorro.dto.response.TransactionsParseResponse;
@@ -11,19 +9,21 @@ import com.blk.auto_ahorro.dto.response.TransactionsValidatorResponse;
 import com.blk.auto_ahorro.exception.InvalidDateFormatException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class TransactionProcessorServiceImpl implements TransactionProcessorService{
 
     //TransactionValidator transactionValidator = new TransactionValidator();
     TransactionValidatorService transactionValidatorService;
+    TransactionSorterService transactionSorterService;
+    DatePeriodService datePeriodService;
 
-    public TransactionProcessorServiceImpl(TransactionValidatorService transactionValidatorService) {
+    public TransactionProcessorServiceImpl(TransactionValidatorService transactionValidatorService, TransactionSorterService transactionSorterService, DatePeriodService datePeriodService) {
         this.transactionValidatorService = transactionValidatorService;
+        this.transactionSorterService = transactionSorterService;
+        this.datePeriodService = datePeriodService;
     }
 
     public List<TransactionsParseResponse> processExpense(List<ExpensesRequest> expenses){
@@ -91,5 +91,57 @@ public class TransactionProcessorServiceImpl implements TransactionProcessorServ
         }
         return response;
     }
+
+    @Override
+    public void processTransactions() {
+        List<TransactionDTO> transactions = new ArrayList<>();
+        List<DateFixedDTO> dateFixedList = new ArrayList<>();
+        List<DateExtraDTO> dateExtraList = new ArrayList<>();
+        List<DatePeriodDTO> datePeriodList = new ArrayList<>();
+
+        List<DatePeriodDTO> listComplete = new ArrayList<>();
+
+        //Sort Arrays
+        transactionSorterService.sortByDate(transactions);
+
+        listComplete.addAll(dateFixedList);
+        listComplete.addAll(dateExtraList);
+        listComplete.addAll(datePeriodList);
+
+        datePeriodService.sortByStartDate(listComplete);
+
+        for(TransactionDTO transaction: transactions){
+            for(DatePeriodDTO date : listComplete){
+                String result = isInRange(transaction.getDate(),date.getStart(), date.getEnd());
+
+                if(result.equals("InRange")){
+                    if (date instanceof DatePeriodDTO){
+
+
+                    }else if (date instanceof DateFixedDTO){
+
+                    }else if (date instanceof DateExtraDTO){
+
+                    }
+                }else if(result.equals("NextIteration")){
+                    break;
+                }
+            }
+        }
+    }
+
+    private String isInRange(LocalDateTime date, LocalDateTime start, LocalDateTime end) {
+        String result = "NextDate";
+        if((date.isEqual(start) || date.isAfter(start))
+                && (date.isEqual(end) || date.isBefore(end))){
+            result = "InRange";
+
+        }else if(date.isAfter(end)){
+            result = "NextIteration";
+        }
+
+        return result;
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.blk.auto_ahorro.controller;
 
 import com.blk.auto_ahorro.dto.request.ExpensesRequest;
+import com.blk.auto_ahorro.dto.request.TransactionsFilterRequest;
 import com.blk.auto_ahorro.dto.request.TransactionsValidatorRequest;
 import com.blk.auto_ahorro.dto.response.TransactionsParseResponse;
 import com.blk.auto_ahorro.dto.response.TransactionsValidatorResponse;
@@ -94,10 +95,8 @@ public class TransactionsController {
      * }
      */
     @PostMapping("/transactions:filter")
-    public ResponseEntity<String> filterTransaction(@RequestBody TransactionRequest request) {
-        if (request.amount <= 0) {
-            return ResponseEntity.badRequest().body("Invalid amount: must be greater than 0");
-        }
+    public ResponseEntity<String> filterTransaction(@RequestBody TransactionsFilterRequest request) {
+        transactionService.getTransactionsWithFilters(request);
         return ResponseEntity.ok("Transaction is valid");
     }
 }

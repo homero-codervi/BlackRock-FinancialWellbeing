@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionsValidatorResponse {
+    //TODO Change the transactionsDTo by transactions response
     private List<TransactionDTO> valid;
     private List<InvalidTransactionDTO> invalid;
 

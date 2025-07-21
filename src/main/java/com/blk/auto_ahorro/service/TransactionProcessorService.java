@@ -16,4 +16,6 @@ public interface TransactionProcessorService {
     public TransactionDTO processExpense(ExpenseDTO expense);
 
     public TransactionsValidatorResponse processTransactions(TransactionsValidatorRequest request);
+
+    public void processTransactions( );
 }
