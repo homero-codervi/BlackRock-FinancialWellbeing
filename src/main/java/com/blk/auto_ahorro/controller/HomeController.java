@@ -8,6 +8,15 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "🚀 Welcome to the API! Try the following paths:\n<br> /hello/v1/transactions:validator";
+        return """
+                🚀 Welcome to the API! Try the following paths:\
+                <br>
+                /blackrock/challenge/v1/transactions:parse\
+                <br>
+                /blackrock/challenge/v1/transactions:validator\
+                <br>
+                /blackrock/challenge/v1/transactions:filter(Incomplete)\
+                <br>
+                /blackrock/challenge/v1/performance""";
     }
 }
